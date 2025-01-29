@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<synth>
+    <object id="buttonPainter" class="indi.IalvinchangI.nckubikebar.style.ButtonPainter"/>
+    <object id="buttonOverPainter" class="indi.IalvinchangI.nckubikebar.style.ButtonOverPainter"/>
+    <style id="buttonStyle">
+        <state>
+            <painter idref="buttonPainter"/>
+        </state>
+        <state value="PRESSED and MOUSE_OVER">
+            <painter idref="buttonPainter"/>
+        </state>
+        <state value="MOUSE_OVER">
+            <painter idref="buttonOverPainter"/>
+        </state>
+    </style>
+
+    <object id="spinnerPainter" class="indi.IalvinchangI.nckubikebar.style.SpinnerPainter"/>
+    <style id="spinnerStyle">
+        <painter idref="spinnerPainter"/>
+    </style>
+
+    <bind style="buttonStyle" type="region" key="Button"/>
+    <bind style="spinnerStyle" type="name" key="Spinner.nextButton"/>
+    <bind style="spinnerStyle" type="name" key="Spinner.previousButton"/>
+    <bind style="spinnerStyle" type="region" key="Spinner"/>
+</synth>
