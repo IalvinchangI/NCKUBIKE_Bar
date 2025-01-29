@@ -95,7 +95,7 @@ public class BarChartTest {
         }
     }
 
-    // @Test
+    @Test
     public void updataClearTest() throws InterruptedException {
         Random random = new Random();
 
