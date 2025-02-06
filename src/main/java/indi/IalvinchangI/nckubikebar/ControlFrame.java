@@ -27,7 +27,7 @@ import indi.IalvinchangI.nckubikebar.tools.GUIConstant;
 public class ControlFrame extends JFrame implements GUIConstant {
 
     public static final String[] LABELS = {
-        "A", "B", "C", "D", "E", "F", 
+        "體力", "知識", "社交", "多巴胺", "零用錢", "軟實力", 
     };
     public static final String[] TITLES = {
         "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", 

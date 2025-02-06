@@ -6,7 +6,7 @@
   <groupId>indi.IalvinchangI.nckubikebar</groupId>
   <artifactId>NCKUBIKE_Bar</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-ALPHA</version>
+  <version>1.0-BETA</version>
 
   <name>NCKUBIKE_Bar</name>
   <!-- FIXME change it to the project's website -->
