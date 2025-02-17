@@ -35,6 +35,12 @@ public class PaintTools {
         targetG2D.drawString(text, textX, textY);
     }
 
+    /**
+     * get image from path
+     * 
+     * @param path the path of image
+     * @return image
+     */
     public static Image getImage(String path) {
         InputStream inputImage = null;
         Image out = null;

@@ -93,6 +93,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
 
         // show show frame
         this.showFrame.setVisible(true);
+        this.showFrame.showPage(ShowFrame.SHOW_PAGE_NAME);
     }
 
     /**
@@ -114,7 +115,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
             public void actionPerformed(ActionEvent e) {
                 if (showFrame.isVisible() == false) {
                     // make show frame visible if it has not show up yet
-                    showFrame.setVisible(true);
+                    showFrame.visible();
                 }
                 // show card
                 if (showFrame.getDataCount() == TITLES.length) {
@@ -152,7 +153,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
             public void actionPerformed(ActionEvent e) {
                 if (showFrame.isVisible() == false) {
                     // make show frame visible if it has not show up yet
-                    showFrame.setVisible(true);
+                    showFrame.visible();
                 }
                 showFrame.reset();
                 input.clear();

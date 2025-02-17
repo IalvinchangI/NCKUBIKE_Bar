@@ -2,7 +2,6 @@ package indi.IalvinchangI.nckubikebar;
 
 import java.util.HashMap;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -25,10 +24,8 @@ public class ShowFrame extends JFrame {
     private CardPanel cardPanel = null;
     private GraphicsDevice device = null;
 
-    private static final String SHOW_PAGE_NAME = "show";
-    private static final String CARD_PAGE_NAME = "card";
-
-    private String currentPageName = SHOW_PAGE_NAME;
+    public static final String SHOW_PAGE_NAME = "show";
+    public static final String CARD_PAGE_NAME = "card";
 
     final Dimension SMALL_SIZE = new Dimension(900, 750);
     
@@ -42,9 +39,8 @@ public class ShowFrame extends JFrame {
 
         // setting
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.rootPane.setBackground(Color.WHITE);
         this.setSize(this.SMALL_SIZE);
-        this.rootPane.setLayout(new CardLayout());
+        this.getContentPane().setLayout(new CardLayout());
         // full screen setting
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
@@ -63,10 +59,9 @@ public class ShowFrame extends JFrame {
 
         // panel setting
         this.showPanel = new ShowPanel(labels);
-        this.rootPane.add(this.showPanel, SHOW_PAGE_NAME);
+        this.getContentPane().add(this.showPanel, SHOW_PAGE_NAME);
         this.cardPanel = new CardPanel(cardPathTabel);
-        this.rootPane.add(this.cardPanel, CARD_PAGE_NAME);
-        this.showPage(SHOW_PAGE_NAME);
+        this.getContentPane().add(this.cardPanel, CARD_PAGE_NAME);
 
         // event
         this.addKeyListener(new KeyAdapter() {
@@ -79,7 +74,6 @@ public class ShowFrame extends JFrame {
                         window.setUndecorated(false);
                         window.setExtendedState(JFrame.NORMAL);
                         device.setFullScreenWindow(null);
-                        window.showPage(currentPageName);
                         window.setVisible(true);
                     }
                     else {
@@ -93,7 +87,6 @@ public class ShowFrame extends JFrame {
                         window.dispose();
                         window.setUndecorated(true);
                         device.setFullScreenWindow(window);
-                        window.showPage(currentPageName);
                     }
                     else {  // full screen with decorate
                         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -102,16 +95,25 @@ public class ShowFrame extends JFrame {
                 else if (keyCode == KeyEvent.VK_F) {  // full screen with decorate
                     window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 }
-                System.out.println(currentPageName);
             }
         });
     }
 
-    private void showPage(String pageName) {
-        ((CardLayout) this.rootPane.getLayout()).show(this.rootPane, pageName);
-        this.currentPageName = pageName;
-        repaint();
-        System.out.println("call: showPage");
+    /**
+     * make show frame visible
+     */
+    public void visible() {
+        this.setSize(this.SMALL_SIZE);  // ensure the size is correct
+        this.setVisible(true);
+    }
+
+    /**
+     * show the page by its name
+     * 
+     * @param pageName the name of page
+     */
+    public void showPage(String pageName) {
+        ((CardLayout) this.getContentPane().getLayout()).show(this.getContentPane(), pageName);
     }
     
     /**
@@ -125,6 +127,9 @@ public class ShowFrame extends JFrame {
         return this.showPanel.updateBar(data, title);
     }
 
+    /**
+     * show the card according to the total sum of each bar
+     */
     public void showCard() {
         int[] index = this.showPanel.getArgmax();
         this.cardPanel.showCard(index[0]);  // TODO only get the first one

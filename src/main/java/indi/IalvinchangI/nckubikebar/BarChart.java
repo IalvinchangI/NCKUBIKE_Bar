@@ -94,6 +94,13 @@ public class BarChart extends JPanel implements GUIConstant {
         return this.rowName.size();
     }
 
+    /**
+     * get the index of the series which has the max sum
+     * <p>
+     * if the sums of any series are equal, the function will list all of them and output the results
+     * 
+     * @return a list of index
+     */
     public int[] getArgmax() {
         ArrayList<String> columnNames = this.data.getArgmax();
         int[] out = new int[columnNames.size()];
@@ -103,7 +110,7 @@ public class BarChart extends JPanel implements GUIConstant {
             for (int labelIndex = 0; labelIndex < this.labels.length; labelIndex++) {
                 if (this.labels[labelIndex].equals(name)) {
                     out[i] = labelIndex;
-                    continue;
+                    break;
                 }
             }
         }
@@ -156,11 +163,11 @@ public class BarChart extends JPanel implements GUIConstant {
     private static final int BAR_ARC_DIAMETER = 10;
 
     /** the ratio of the bar width to the margin width */
-    private static final float BAR_MARGIN_RATIO = 0.5f;
+    private static final float BAR_MARGIN_RATIO = 0.9f;
     /** the margin of frame {up, left, down, right} */
     private static final int[] MARGIN = {10, 40, 40, 40};
     /** the margin between the frame and the top of the bar */
-    private static final int BAR_UP_MARGIN = 16;
+    private static final int BAR_UP_MARGIN = 24;
 
     /** the maximum number of labels on the y-axis */
     private static final int Y_LABEL_COUNT_LIMIT = 5;

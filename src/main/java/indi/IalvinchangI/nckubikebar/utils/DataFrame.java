@@ -82,7 +82,13 @@ public class DataFrame extends HashMap<String, Series> {
         return max;
     }
 
-
+    /**
+     * get the name of the series which has the max sum
+     * <p>
+     * if the sums of any series are equal, the function will list all of them and output the results
+     * 
+     * @return a list of name
+     */
     public ArrayList<String> getArgmax() {
         ArrayList<String> columnNames = new ArrayList<>(this.keySet());
         ArrayList<String> names = new ArrayList<>();
