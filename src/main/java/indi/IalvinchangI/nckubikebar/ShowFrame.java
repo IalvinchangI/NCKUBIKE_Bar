@@ -131,8 +131,8 @@ public class ShowFrame extends JFrame {
      * show the card according to the total sum of each bar
      */
     public void showCard() {
-        int[] index = this.showPanel.getArgmax();
-        this.cardPanel.showCard(index[0]);  // TODO only get the first one
+        int[] indices = this.showPanel.getArgmax();
+        this.cardPanel.showCard(indices);
         this.showPage(CARD_PAGE_NAME);
     }
 
