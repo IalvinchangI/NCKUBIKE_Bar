@@ -93,6 +93,23 @@ public class BarChart extends JPanel implements GUIConstant {
     public int getDataCount() {
         return this.rowName.size();
     }
+
+    public int[] getArgmax() {
+        ArrayList<String> columnNames = this.data.getArgmax();
+        int[] out = new int[columnNames.size()];
+
+        for (int i = 0; i < out.length; i++) {
+            String name = columnNames.get(i);
+            for (int labelIndex = 0; labelIndex < this.labels.length; labelIndex++) {
+                if (this.labels[labelIndex].equals(name)) {
+                    out[i] = labelIndex;
+                    continue;
+                }
+            }
+        }
+
+        return out;
+    }
     
     /**
      * transfer the data from raw one to plot one

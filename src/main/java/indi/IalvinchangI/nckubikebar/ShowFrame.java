@@ -1,34 +1,34 @@
 package indi.IalvinchangI.nckubikebar;
 
 import java.util.HashMap;
-
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import indi.IalvinchangI.nckubikebar.tools.GUIConstant;
 
 
 /**
- * the window to show Bar Chart
+ * the window to show Bar Chart and Cards
  * <p>
  * this window allows user to switch between full screen and normal size
  * 
  * @author IalvinchangI
  */
-public class ShowFrame extends JFrame implements GUIConstant {
+public class ShowFrame extends JFrame {
 
-    private JLabel title = null;
-    private BarChart bar = null;
+    private ShowPanel showPanel = null;
+    private CardPanel cardPanel = null;
     private GraphicsDevice device = null;
+
+    private static final String SHOW_PAGE_NAME = "show";
+    private static final String CARD_PAGE_NAME = "card";
+
+    private String currentPageName = SHOW_PAGE_NAME;
 
     final Dimension SMALL_SIZE = new Dimension(900, 750);
     
@@ -37,15 +37,14 @@ public class ShowFrame extends JFrame implements GUIConstant {
      * 
      * @param labels the label for each bar
      */
-    public ShowFrame(String[] labels) {
+    public ShowFrame(String[] labels, String[] cardPathTabel) {
         ShowFrame window = this;
 
         // setting
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.rootPane.setBackground(Color.WHITE);
         this.setSize(this.SMALL_SIZE);
-        this.rootPane.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
+        this.rootPane.setLayout(new CardLayout());
         // full screen setting
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setResizable(false);
@@ -62,18 +61,12 @@ public class ShowFrame extends JFrame implements GUIConstant {
             this.device.setFullScreenWindow(window);
         }
 
-        // title label
-        this.title = new JLabel(" ");
-        this.title.setFont(TITLE_FONT);
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        this.rootPane.add(this.title, constraints);
-
-        // bar chart
-        this.bar = new BarChart(labels);
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        this.rootPane.add(this.bar, constraints);
+        // panel setting
+        this.showPanel = new ShowPanel(labels);
+        this.rootPane.add(this.showPanel, SHOW_PAGE_NAME);
+        this.cardPanel = new CardPanel(cardPathTabel);
+        this.rootPane.add(this.cardPanel, CARD_PAGE_NAME);
+        this.showPage(SHOW_PAGE_NAME);
 
         // event
         this.addKeyListener(new KeyAdapter() {
@@ -86,6 +79,7 @@ public class ShowFrame extends JFrame implements GUIConstant {
                         window.setUndecorated(false);
                         window.setExtendedState(JFrame.NORMAL);
                         device.setFullScreenWindow(null);
+                        window.showPage(currentPageName);
                         window.setVisible(true);
                     }
                     else {
@@ -99,6 +93,7 @@ public class ShowFrame extends JFrame implements GUIConstant {
                         window.dispose();
                         window.setUndecorated(true);
                         device.setFullScreenWindow(window);
+                        window.showPage(currentPageName);
                     }
                     else {  // full screen with decorate
                         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -107,8 +102,16 @@ public class ShowFrame extends JFrame implements GUIConstant {
                 else if (keyCode == KeyEvent.VK_F) {  // full screen with decorate
                     window.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 }
+                System.out.println(currentPageName);
             }
         });
+    }
+
+    private void showPage(String pageName) {
+        ((CardLayout) this.rootPane.getLayout()).show(this.rootPane, pageName);
+        this.currentPageName = pageName;
+        repaint();
+        System.out.println("call: showPage");
     }
     
     /**
@@ -119,19 +122,21 @@ public class ShowFrame extends JFrame implements GUIConstant {
      * @return success or not
      */
     public boolean updateBar(HashMap<String, Integer> data, String title) {
-        if (this.bar.update(data, title) == true) {
-            this.title.setText(title);
-            return true;
-        }
-        return false;
+        return this.showPanel.updateBar(data, title);
+    }
+
+    public void showCard() {
+        int[] index = this.showPanel.getArgmax();
+        this.cardPanel.showCard(index[0]);  // TODO only get the first one
+        this.showPage(CARD_PAGE_NAME);
     }
 
     /**
      * Clear the bar chart and title. Then, update it.
      */
-    public void clearBar() {
-        this.bar.clear();
-        this.title.setText(" ");
+    public void reset() {
+        this.showPanel.clearBar();
+        this.showPage(SHOW_PAGE_NAME);
     }
 
     /**
@@ -140,6 +145,6 @@ public class ShowFrame extends JFrame implements GUIConstant {
      * @return the row count of the data
      */
     public int getDataCount() {
-        return this.bar.getDataCount();
+        return this.showPanel.getDataCount();
     }
 }

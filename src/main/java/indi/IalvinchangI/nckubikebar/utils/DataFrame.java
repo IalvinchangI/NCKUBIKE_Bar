@@ -1,5 +1,6 @@
 package indi.IalvinchangI.nckubikebar.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -67,6 +68,8 @@ public class DataFrame extends HashMap<String, Series> {
     
     /**
      * sum the value in each series and return the max one
+     * <p>
+     * if all the sum are negative, the function will return 0
      * 
      * @return the max sum of the series in data
      */
@@ -77,5 +80,27 @@ public class DataFrame extends HashMap<String, Series> {
             max = (max < sum) ? sum : max;
         }
         return max;
+    }
+
+
+    public ArrayList<String> getArgmax() {
+        ArrayList<String> columnNames = new ArrayList<>(this.keySet());
+        ArrayList<String> names = new ArrayList<>();
+        names.add(columnNames.get(0));
+        int max = this.get(names.get(0)).sum();
+
+        for (int i = 1; i < columnNames.size(); i++) {
+            int temp = this.get(columnNames.get(i)).sum();
+            if (temp > max) {
+                names.clear();
+                names.add(columnNames.get(i));
+                max = temp;
+            }
+            else if (temp == max) {
+                names.add(columnNames.get(i));
+            }
+        }
+
+        return names;
     }
 }

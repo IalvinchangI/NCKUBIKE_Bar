@@ -6,17 +6,15 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import indi.IalvinchangI.nckubikebar.tools.GUIConstant;
+import indi.IalvinchangI.nckubikebar.tools.PaintTools;
 
 
 /**
@@ -30,12 +28,24 @@ public class ControlFrame extends JFrame implements GUIConstant {
         "體力", "知識", "社交", "多巴胺", "零用錢", "軟實力", 
     };
     public static final String[] TITLES = {
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", 
+        "Mon", };//"Tue", "Wed", "Thu", "Fri", "Sat", 
+    // };
+    public static final String[] CARD_PATH_TABLE = {
+        "/cards/c1.png", 
+        "/cards/c2.png", 
+        "/cards/c3.png", 
+        "/cards/c4.png", 
+        "/cards/c5.png", 
+        "/cards/c6.png"
     };
 
     private static final String ICON_PATH = "/BarChart.png";
     /** the size of drawButton and clearButton */
     private static final Dimension BUTTON_SIZE = new Dimension(150, 30);
+
+    private static final String DRAW_TEXT = "繪製";
+    private static final String SHOW_TEXT = "顯示結果";
+    private static final String CLEAR_TEXT = "清除";
 
     private InputPanel input = null;
     private JButton drawButton = null;
@@ -56,25 +66,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
         constraints.anchor = GridBagConstraints.CENTER;
 
         // init icon
-        InputStream inputImage = null;
-        Image icon = null;
-        try {
-            inputImage = ControlFrame.class.getResourceAsStream(ICON_PATH);
-            icon = ImageIO.read(inputImage);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if (inputImage != null) {
-                    inputImage.close();
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        Image icon = PaintTools.getImage(ICON_PATH);
 
         // input panel
         this.input = new InputPanel(LABELS);
@@ -91,7 +83,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
         this.add(this.initButtonPanel(), constraints);
         
         // show frame
-        this.showFrame = new ShowFrame(LABELS);
+        this.showFrame = new ShowFrame(LABELS, CARD_PATH_TABLE);
         
         // set icon
         if (icon != null) {
@@ -114,7 +106,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
         GridBagConstraints constraints = new GridBagConstraints();
 
         // draw button
-        this.drawButton = new JButton("繪製");
+        this.drawButton = new JButton(DRAW_TEXT);
         this.drawButton.setPreferredSize(BUTTON_SIZE);
         this.drawButton.setForeground(TEXT_COLOR);
         this.drawButton.setFont(SUBTITLE_FONT);
@@ -124,10 +116,22 @@ public class ControlFrame extends JFrame implements GUIConstant {
                     // make show frame visible if it has not show up yet
                     showFrame.setVisible(true);
                 }
+                // show card
+                if (showFrame.getDataCount() == TITLES.length) {
+                    // We have not called updateBar before, so the data count in bar is original one.
+                    showFrame.showCard();
+                    return;
+                }
+
                 // get data and update bar chart
                 HashMap<String, Integer> data = input.getInput();
                 if (showFrame.updateBar(data, TITLES[(showFrame.getDataCount() % TITLES.length)]) == true) {
                     input.clear();
+                }
+                // change the text on draw button
+                if (showFrame.getDataCount() == TITLES.length) {
+                    // We have called updateBar before, so the data count in bar is updated.
+                    drawButton.setText(SHOW_TEXT);
                 }
             }
         });
@@ -140,7 +144,7 @@ public class ControlFrame extends JFrame implements GUIConstant {
         panel.add(Box.createHorizontalStrut(70), constraints);
         
         // clear button
-        this.clearButton = new JButton("清除");
+        this.clearButton = new JButton(CLEAR_TEXT);
         this.clearButton.setPreferredSize(BUTTON_SIZE);
         this.clearButton.setForeground(TEXT_COLOR);
         this.clearButton.setFont(SUBTITLE_FONT);
@@ -150,8 +154,9 @@ public class ControlFrame extends JFrame implements GUIConstant {
                     // make show frame visible if it has not show up yet
                     showFrame.setVisible(true);
                 }
-                showFrame.clearBar();
+                showFrame.reset();
                 input.clear();
+                drawButton.setText(DRAW_TEXT);
             }
         });
         constraints.gridx = 2;
