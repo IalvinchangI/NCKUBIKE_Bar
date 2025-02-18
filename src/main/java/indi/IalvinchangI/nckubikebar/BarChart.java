@@ -81,7 +81,9 @@ public class BarChart extends JPanel implements GUIConstant {
         this.rowName.add(title);
         this.data.putRow(newData);
         // update graph
-        this.animation();
+        if (this.data.isRowZero(this.getDataCount() - 1) == false) {
+            this.animation();
+        }
         return true;
     }
 
