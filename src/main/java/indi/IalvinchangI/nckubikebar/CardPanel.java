@@ -60,6 +60,8 @@ public class CardPanel extends JPanel {
 
     /** the margin of card {up and down, left and right} */
     private static final float[] MARGIN = new float[] {0.01f, 0.01f};
+    /** the arrangement of cards {column, row} */
+    private static final int[] CARD_GRID = new int[] {3, 2};
     // private static final float ARC_DIAMETER_RATIO = 0.05f;
 
 
@@ -73,7 +75,7 @@ public class CardPanel extends JPanel {
 
         if (this.cardImages.isEmpty() == false) {
             Dimension panelSize = this.getSize();
-            Dimension slotSize = new Dimension(panelSize.width / this.cardPathTabel.length, panelSize.height);
+            Dimension slotSize = new Dimension(panelSize.width / CARD_GRID[0], panelSize.height / CARD_GRID[1]);
             
             for (Map.Entry<Integer, Image> entry : this.cardImages.entrySet()) {
                 int index = entry.getKey();
@@ -93,8 +95,8 @@ public class CardPanel extends JPanel {
 
                 // x, y
                 Dimension zoomCardImageSize = new Dimension(zoomCardImage.getWidth(null), zoomCardImage.getHeight(null));
-                int x = (slotSize.width - zoomCardImageSize.width) / 2 + slotSize.width * index;
-                int y = (slotSize.height - zoomCardImageSize.height) / 2;
+                int x = (slotSize.width - zoomCardImageSize.width) / 2 + slotSize.width * (index % CARD_GRID[0]);
+                int y = (slotSize.height - zoomCardImageSize.height) / 2 + slotSize.height * (index / CARD_GRID[0]);
                 // int arc_diameter = (int) (Math.min(zoomCardImageSize.width, zoomCardImageSize.height) * ARC_DIAMETER_RATIO);
 
                 // g2d.setClip(new RoundRectangle2D.Float(

@@ -362,6 +362,9 @@ public class BarChart extends JPanel implements GUIConstant {
                     if (diffIndex == frameSeries.size() || diffIndex == -1) {  // no different
                         continue;
                     }
+                    if (frameValue[barIndex] < 0) {  // the bar can't grow when the value is less than 0
+                        continue;
+                    }
                     adjustFrameData(frameSeries, plotSeries, diffIndex, unitDisplacement[barIndex]);
                 }
                 repaint();
