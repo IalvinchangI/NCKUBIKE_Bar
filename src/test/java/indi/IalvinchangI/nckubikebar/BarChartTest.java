@@ -102,7 +102,7 @@ public class BarChartTest {
         BarChart bar = new BarChart(ControlFrame.LABELS);
         DataFrame data = new DataFrame(ControlFrame.LABELS);
         for (int i = 0; i < 500; i++) {
-            if (random.nextInt(7) == 0) {  // clear
+            if (random.nextInt(5) == 0) {  // clear
                 bar.clear();
                 data.clearData();
                 

@@ -13,7 +13,7 @@ import javax.swing.plaf.synth.SynthContext;
  */
 public class ButtonOverPainter extends ButtonPainter {
     
-    public static final Color BACKGROUND = new Color(132, 169, 140);
+    public static final Color BACKGROUND = DARK_BACKGROUND;
 
     public void paintButtonBackground(SynthContext context, Graphics g, int x, int y, int width, int height) {
         int arcDiameter = (int)(Math.min(width, height) * ARC_DIAMETER_RATIO);

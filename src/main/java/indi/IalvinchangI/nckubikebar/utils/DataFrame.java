@@ -82,7 +82,13 @@ public class DataFrame extends HashMap<String, Series> {
         return max;
     }
 
-
+    /**
+     * get the name of the series which has the max sum
+     * <p>
+     * if the sums of any series are equal, the function will list all of them and output the results
+     * 
+     * @return a list of name
+     */
     public ArrayList<String> getArgmax() {
         ArrayList<String> columnNames = new ArrayList<>(this.keySet());
         ArrayList<String> names = new ArrayList<>();
@@ -102,5 +108,25 @@ public class DataFrame extends HashMap<String, Series> {
         }
 
         return names;
+    }
+
+    /**
+     * whether all the elements in the specific row are zero
+     * <p>
+     * if the row does not exist, the function will return true
+     * 
+     * @param rowIndex the index of row in DataFrame
+     * @return
+     */
+    public boolean isRowZero(int rowIndex) {
+        if (rowIndex >= this.get(this.keySet().toArray()[0]).size()) {  // out of range
+            return true;
+        }
+        for (Series series : this.values()) {
+            if (series.get(rowIndex) != 0) {
+                return false;
+            }
+        }
+        return true;  // the elements in the same row are 0
     }
 }

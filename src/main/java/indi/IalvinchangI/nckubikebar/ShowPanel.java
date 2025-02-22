@@ -1,19 +1,30 @@
 package indi.IalvinchangI.nckubikebar;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import indi.IalvinchangI.nckubikebar.tools.GUIConstant;
 
+
+/**
+ * the panel to display bar chart and its title
+ * 
+ * @author IalvinchangI
+ */
 public class ShowPanel extends JPanel implements GUIConstant {
     
     private JLabel title = null;
     private BarChart bar = null;
+
+    /** the margin of frame {up, left, down, right} */
+    private static final int[] MARGIN = new int[] {30, 30, 30, 30};
 
     /**
      * create ShowPanel
@@ -23,21 +34,25 @@ public class ShowPanel extends JPanel implements GUIConstant {
     public ShowPanel(String[] labels) {
         // setting
         this.setBackground(Color.WHITE);
-        this.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
+        this.setLayout(new BorderLayout());
 
         // title label
         this.title = new JLabel(" ");
         this.title.setFont(TITLE_FONT);
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        this.add(this.title, constraints);
+        this.title.setHorizontalAlignment(SwingConstants.CENTER);
+        this.title.setBorder(BorderFactory.createEmptyBorder(
+            MARGIN[0], MARGIN[1], 0, MARGIN[3]
+        ));
+        this.add(this.title, BorderLayout.NORTH);
 
         // bar chart
         this.bar = new BarChart(labels);
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        this.add(this.bar, constraints);
+        this.add(this.bar, BorderLayout.CENTER);
+
+        // margin
+        this.add(Box.createHorizontalStrut(MARGIN[1]), BorderLayout.WEST);
+        this.add(Box.createHorizontalStrut(MARGIN[3]), BorderLayout.EAST);
+        this.add(Box.createVerticalStrut(MARGIN[2]), BorderLayout.SOUTH);
     }
 
     /**
@@ -72,6 +87,13 @@ public class ShowPanel extends JPanel implements GUIConstant {
         return this.bar.getDataCount();
     }
 
+    /**
+     * get the index of the series which has the max sum
+     * <p>
+     * if the sums of any series are equal, the function will list all of them and output the results
+     * 
+     * @return a list of index
+     */
     public int[] getArgmax() {
         return this.bar.getArgmax();
     }

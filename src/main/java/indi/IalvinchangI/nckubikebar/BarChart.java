@@ -81,7 +81,9 @@ public class BarChart extends JPanel implements GUIConstant {
         this.rowName.add(title);
         this.data.putRow(newData);
         // update graph
-        this.animation();
+        if (this.data.isRowZero(this.getDataCount() - 1) == false) {
+            this.animation();
+        }
         return true;
     }
 
@@ -94,6 +96,13 @@ public class BarChart extends JPanel implements GUIConstant {
         return this.rowName.size();
     }
 
+    /**
+     * get the index of the series which has the max sum
+     * <p>
+     * if the sums of any series are equal, the function will list all of them and output the results
+     * 
+     * @return a list of index
+     */
     public int[] getArgmax() {
         ArrayList<String> columnNames = this.data.getArgmax();
         int[] out = new int[columnNames.size()];
@@ -103,7 +112,7 @@ public class BarChart extends JPanel implements GUIConstant {
             for (int labelIndex = 0; labelIndex < this.labels.length; labelIndex++) {
                 if (this.labels[labelIndex].equals(name)) {
                     out[i] = labelIndex;
-                    continue;
+                    break;
                 }
             }
         }
@@ -156,11 +165,11 @@ public class BarChart extends JPanel implements GUIConstant {
     private static final int BAR_ARC_DIAMETER = 10;
 
     /** the ratio of the bar width to the margin width */
-    private static final float BAR_MARGIN_RATIO = 0.5f;
+    private static final float BAR_MARGIN_RATIO = 0.3f;
     /** the margin of frame {up, left, down, right} */
     private static final int[] MARGIN = {10, 40, 40, 40};
     /** the margin between the frame and the top of the bar */
-    private static final int BAR_UP_MARGIN = 16;
+    private static final int BAR_UP_MARGIN = 24;
 
     /** the maximum number of labels on the y-axis */
     private static final int Y_LABEL_COUNT_LIMIT = 5;
@@ -190,10 +199,11 @@ public class BarChart extends JPanel implements GUIConstant {
 
         // constant
         Dimension chartSize = this.getSize();
+        float bar_margin_ratio = BAR_MARGIN_RATIO + chartSize.width / chartSize.height;
         // x
         int plotWidth = chartSize.width - MARGIN[3] - MARGIN[1];
         int barCount = this.data.size();
-        float barWidth = (plotWidth- (HALF_BORDER_WIDTH << 1)) / ((barCount + 1) * BAR_MARGIN_RATIO + barCount);
+        float barWidth = (plotWidth- (HALF_BORDER_WIDTH << 1)) / ((barCount + 1) * bar_margin_ratio + barCount);
         // y
         int plotHeight = chartSize.height - MARGIN[2] - MARGIN[0];
         int baseline = chartSize.height - MARGIN[2] - HALF_BORDER_WIDTH;
@@ -204,9 +214,9 @@ public class BarChart extends JPanel implements GUIConstant {
         // plot bar
         int labelIndex = 0;
         for (
-            float x = barWidth * BAR_MARGIN_RATIO + MARGIN[3] + HALF_BORDER_WIDTH; 
+            float x = barWidth * bar_margin_ratio + MARGIN[3] + HALF_BORDER_WIDTH; 
             (int)(x + 0.1) < chartSize.width - MARGIN[1] - HALF_BORDER_WIDTH; 
-            x += barWidth * (1 + BAR_MARGIN_RATIO), labelIndex++
+            x += barWidth * (1 + bar_margin_ratio), labelIndex++
         ) {
             int y = baseline;
             String label = this.labels[labelIndex];
@@ -350,6 +360,9 @@ public class BarChart extends JPanel implements GUIConstant {
                     }
                     // animate bar
                     if (diffIndex == frameSeries.size() || diffIndex == -1) {  // no different
+                        continue;
+                    }
+                    if (frameValue[barIndex] < 0) {  // the bar can't grow when the value is less than 0
                         continue;
                     }
                     adjustFrameData(frameSeries, plotSeries, diffIndex, unitDisplacement[barIndex]);
