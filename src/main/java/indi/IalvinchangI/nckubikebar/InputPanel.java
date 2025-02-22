@@ -2,11 +2,13 @@ package indi.IalvinchangI.nckubikebar;
 
 import java.util.HashMap;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import indi.IalvinchangI.nckubikebar.tools.GUIConstant;
 
@@ -14,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 
 /**
@@ -56,7 +60,17 @@ public class InputPanel extends JPanel implements GUIConstant {
             this.labels[i].setFont(CONTENT_FONT);
             this.inputs[i].setForeground(TEXT_COLOR);
             this.inputs[i].setFont(CONTENT_FONT);
-            
+
+            // select number when focus => easy to edit number for user
+            JFormattedTextField textField = ((JSpinner.NumberEditor) this.inputs[i].getEditor()).getTextField();
+            textField.setSelectionColor(DARK_BACKGROUND);
+            textField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    SwingUtilities.invokeLater(() -> textField.selectAll());
+                }
+            });
+
             constraints.gridx = i;
             constraints.gridy = 0;
             this.add(this.labels[i], constraints);

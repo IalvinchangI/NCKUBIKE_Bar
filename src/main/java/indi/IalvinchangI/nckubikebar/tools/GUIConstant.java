@@ -15,5 +15,6 @@ public interface GUIConstant {
     public static final Font CONTENT_FONT = new Font("微軟正黑體", Font.BOLD, 14);
     
     public static final Color BACKGROUND = new Color(202, 210, 197);
+    public static final Color DARK_BACKGROUND = new Color(132, 169, 140);
     public static final Color TEXT_COLOR = Color.BLACK;
 }
