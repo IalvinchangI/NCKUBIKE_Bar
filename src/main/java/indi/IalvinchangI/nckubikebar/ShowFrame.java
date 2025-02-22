@@ -28,6 +28,8 @@ public class ShowFrame extends JFrame {
     public static final String CARD_PAGE_NAME = "card";
 
     final Dimension SMALL_SIZE = new Dimension(900, 750);
+
+    private boolean fullscreen_TF = false;
     
     /**
      * create ShowFrame
@@ -55,6 +57,7 @@ public class ShowFrame extends JFrame {
         if (this.device != null) {
             this.setUndecorated(true);
             this.device.setFullScreenWindow(window);
+            this.fullscreen_TF = true;
         }
 
         // panel setting
@@ -68,32 +71,58 @@ public class ShowFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 int keyCode = e.getKeyChar();
-                if (keyCode == KeyEvent.VK_ESCAPE) {  // exit full screen
+                if (keyCode == KeyEvent.VK_ESCAPE && fullscreen_TF == true) {  // exit full screen
                     if (device != null && device.getFullScreenWindow() == window) {
+                        // Initially, window is fullscreen, undecorated, and on top of other windows.
                         window.dispose();
                         window.setUndecorated(false);
                         window.setExtendedState(JFrame.NORMAL);
                         device.setFullScreenWindow(null);
                         window.setVisible(true);
                     }
+                    else if (window.isUndecorated() == true) {
+                        // Initially, window is fullscreen and undecorated.
+                        window.dispose();
+                        window.setUndecorated(false);
+                        window.setSize(window.SMALL_SIZE);
+                        window.setExtendedState(JFrame.NORMAL);
+                        window.setVisible(true);
+                    }
                     else {
+                        // Initially, window is fullscreen and decorated.
+                        // Normally, it is impossible to go to here.
                         window.setSize(window.SMALL_SIZE);
                         window.setExtendedState(JFrame.NORMAL);
                     }
+                    fullscreen_TF = false;
                 }
-                else if (keyCode == 'f') {
+                else if (keyCode == 'f' && fullscreen_TF == false) {
                     if (device != null && device.getFullScreenWindow() != window) {
-                        // full screen without decorate
+                        // window becomes fullscreen, undecorated, and stays on top of other windows.
                         window.dispose();
                         window.setUndecorated(true);
                         device.setFullScreenWindow(window);
                     }
-                    else {  // full screen with decorate
+                    else {
+                        // window becomes fullscreen and undecorated.
                         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        if (window.isUndecorated() == false) {
+                            window.dispose();
+                            window.setUndecorated(true);
+                            window.setVisible(true);
+                        }
                     }
+                    fullscreen_TF = true;
                 }
-                else if (keyCode == KeyEvent.VK_F) {  // full screen with decorate
+                else if (keyCode == KeyEvent.VK_F && fullscreen_TF == false) {
                     window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    if (window.isUndecorated() == false) {
+                        // window becomes fullscreen and undecorated.
+                        window.dispose();
+                        window.setUndecorated(true);
+                        window.setVisible(true);
+                    }
+                    fullscreen_TF = true;
                 }
             }
         });
