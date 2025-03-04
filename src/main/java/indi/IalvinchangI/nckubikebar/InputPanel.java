@@ -27,7 +27,7 @@ import java.awt.event.FocusEvent;
  */
 public class InputPanel extends JPanel implements GUIConstant {
 
-    public static final int INPUT_LIMIT = 20;
+    public static final int INPUT_LIMIT = 100;
 
     private static final Dimension FIELD_SIZE = new Dimension(60, 25);
 

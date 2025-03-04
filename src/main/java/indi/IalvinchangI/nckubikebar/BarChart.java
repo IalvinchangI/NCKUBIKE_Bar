@@ -309,7 +309,7 @@ public class BarChart extends JPanel implements GUIConstant {
         int totalFrame = ANIMATION_DURATION / ANIMATION_DELAY;
         int[] unitDisplacement = new int[valueDelta.size()];
         for (int i = 0; i < valueDelta.size(); i++) {
-            unitDisplacement[i] = valueDelta.get(this.labels[i]) / totalFrame + MathTools.getSign(valueDelta.get(this.labels[i]));
+            unitDisplacement[i] = (InputPanel.INPUT_LIMIT / totalFrame + 1) * MathTools.getSign(valueDelta.get(this.labels[i]));
         }
 
         // animate the bar

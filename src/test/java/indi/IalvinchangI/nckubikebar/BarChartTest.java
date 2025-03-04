@@ -19,7 +19,7 @@ public class BarChartTest {
         HashMap<String, Integer> out = new HashMap<>();
         Random random = new Random();
         for (String label : labels) {
-            out.put(label, random.nextInt(-20, 21));
+            out.put(label, random.nextInt(-100, 101));
         }
         return out;
     }
@@ -97,16 +97,17 @@ public class BarChartTest {
 
     @Test
     public void updataClearTest() throws InterruptedException {
-        Random random = new Random();
+        boolean cleanState = false;
 
         BarChart bar = new BarChart(ControlFrame.LABELS);
         DataFrame data = new DataFrame(ControlFrame.LABELS);
         for (int i = 0; i < 500; i++) {
-            if (random.nextInt(5) == 0) {  // clear
+            if (cleanState == true) {  // clear
                 bar.clear();
                 data.clearData();
                 
                 assertEquals(data, getData(bar, "data"));
+                cleanState = false;
             }
             else {  // update
                 HashMap<String, Integer> newData = generateData(ControlFrame.LABELS);
@@ -116,6 +117,7 @@ public class BarChartTest {
 
                 assertEquals(data, getData(bar, "data"));
                 Thread.sleep(1500);
+                cleanState = true;
             }
             assertEquals(getPlotData(bar), getData(bar, "frameData"));
 
